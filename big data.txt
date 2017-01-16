@@ -1,0 +1,1108 @@
+﻿	     http://192.168.1.2:8081/jupiter-starter-web#/home
+             
+
+             http://www.bkjia.com/yjs/946859.html（azkaban）
+               http://www.doc88.com/p-315736599669.html(expression)
+
+
+1. ctrl + v
+2.shift + i
+3.//
+4.ctrl + esc
+
+
+select *, row_number() over()  from d_cocacola_sku ;（psql merge）
+
+      解压、打包命令：  http://www.cnblogs.com/eoiioe/archive/2008/09/20/1294681.html
+            https://github.com/apache/hive/blob/master/service-rpc/if/TCLIService.thrift(hive thrift)
+            https://developers.google.com/protocol-buffers/docs/reference/java-generated#fields(protol buffer 官方文档)    
+            http://docs.oracle.com/javase/7/docs/api/java/net/Socket.html(soket文档)  
+            https://github.com/jgritman/httpbuilder/wiki/AsyncHTTPBuilder(httpBuild异步)
+  grails文档: http://docs.grails.org/latest/
+               https://en.wikipedia.org/wiki/Grails_(framework)
+               http://www.heapoverflow.me/question-configuring-cors-with-grails-3-and-spring-security-rest-39912427
+               https://grails.org/plugin/cors
+            http://blog.agileorbit.com/2015/05/11/Grails3-OAuth2.html
+            
+https://github.com/bobbywarner/grails3-oauth2-api
+clojure电子书：https://github.com/clojurians-org/clojure-ebook
+
+               http://groovy-lang.org/gdk.html(groovy)
+
+               http://v1.hcharts.cn/docs/index.php?doc=basic-axis(highchart)
+               https://hub.docker.com/_/postgres/
+presto： https://github.com/prestodb/presto/wiki/HTTP-Protocol
+        http://stackoverflow.com/questions/37082016/how-to-manage-presto-query-session-variables-using-rest-api/37082502#37082502
+cascolog： http://cascalog.org/articles/getting_started.html
+          https://github.com/Cascading/Impatient-Cascalog/wiki`
+autho2:https://github.com/clojurians-org/grails3-oauth2-api
+       (security-oauth) http://projects.spring.io/spring-security-oauth/docs/oauth2.html
+        http://bluesliverx.github.io/grails-spring-security-oauth2-provider/
+
+postgres：https://www.postgresql.org/docs/9.6/static/functions-json.html
+
+crosstab:https://www.postgresql.org/docs/current/static/tablefunc.html
+
+
+
+psql:~/.profile
+
+
+
+import com.mysql.cj.jdbc.MysqlDataSource
+def dataSource = _getDataSource("192.168.1.3", "5432", "ms", "spiderdt")
+    def sqlClient = _openSqlClient(dataSource)
+    def _getDataSource(hostname, port, username, password) {
+        def dataSource = new MysqlDataSource().each {
+                             it.url = "jdbc:postgresql://${hostname}:${port}/ms?useSSL=false".toString()
+                             it.user = username
+                             it.password = password
+                         }
+        [_dataSource: dataSource, args: [hostname: hostname, port: port, username: username, password: password]]
+    }
+
+
+
+select * from Auth_User u left join Auth_UserSecurityRole r where u.username = r.username
+UUID.randomUUID()
+
+parseJson text -> object:
+import groovy.json.JsonSlurper
+def plan = new JsonSlurper().parseText(new File('data/plan.json'))
+
+tomcat日志查询：
+tomcat/logs：tail -f catalina.out
+
+grails ：
+grails create-app report-api --profile=rest-api
+grails create-domain-class project
+grails create-domain-class category
+grails create-domain-class report
+grails create-domain-class selector
+grails create-domain-class data
+grails generate-all report.api.Project
+grails generate-all report.api.Category
+grails generate-all report.api.Report
+grails generate-all report.api.Selector
+grails generate-all report.api.Data
+grails create-service mysql
+
+db-api:
+curl --data "select * from model.d_bolome_client where user_id in(select user_id from agg.fulltest_20160601_20160630_predicttest limit 50)" http://192.168.1.2:1112/v1/statement/ --header "X-Presto-User: spiderdt" --header "X-Presto-Catalog: hive"
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"111","sql":"select age,count(0)  from model.d_bolome_client where user_id in(select user_id  from (    select user_id, row_number() over (order by score desc) rn from agg.fulltest_20160601_20160630_predictclient) tmp where rn <= 50000)  group by age order by age"}' http://192.168.1.2:2222/connector/hive/query
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"111","sql":"select * from model.d_bolome_client where user_id in(select user_id from agg.fulltest_20160601_20160630_predicttest limit 50)"}' http://192.168.1.2:2222/connector/hive/query
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"111","sql":"select age,count(0)  from model.d_bolome_client where user_id in(select user_id  from (    select user_id, row_number() over (order by score desc) rn from agg.fulltest_20160601_20160630_predictclient) tmp where rn <= 50000)  group by age order by age"}' http://192.168.1.2:2222/connector/hive/query
+
+
+
+
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"111","sql":"select * from model.d_bolome_shows limit 10"}' http://192.168.1.2:2222/connector/hive/query
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"111","sql":"select cast(rn as integer) / (select cast(ceil(least(count(1), 88888) / 100.0) as integer) from agg.fulltest_20160601_20160630_predictclient ) as grp, sum(p_obs) as p_obs_sum
+from(select user_id,p_obs, rn from (select user_id,p_obs, row_number() over (order by score desc) rn from agg.fulltest_20160601_20160630_predictclient ) tmp where rn>= 1 and rn <= 88888 order by rn) t1
+group by cast(rn as integer) / (select cast(ceil(least(count(1), 88888) / 100.0) as integer) from agg.fulltest_20160601_20160630_predictclient)
+order by grp"}' http://192.168.1.2:2222/connector/hive/query
+
+
+
+
+auth-api(grails)：
+grails create-app auth-api --profile=rest-api
+grails create-domain-class user
+    (String username
+
+    String email
+
+    String password
+
+    String fullName)
+grails create-service oauth2
+grails generate-all auth.api.User
+grails create-service CustomUserDetails(加入spring security 验证用户身份)
+curl -X POST -L -H "Content-Type: application/json" -d '{"username": "chong", "password": "spiderdt", "email": "111111", "fullName": "chongqiongjie"}' http://192.168.1.2:2222/user
+grails auth-api token:
+https://github.com/bobbywarner/grails3-oauth2-api
+curl -X POST -u chong-client:spiderdt http://192.168.1.2:1111/user/aaa
+curl -X POST -u chong:spiderdt http://localhost:1111/oauth/token -H "Accept: application/json" -d "password=spiderdt&username=chong&grant_type=password&scope=read%20write"
+curl -X POST -u chong-client:spiderdt http://localhost:1111/oauth/token\?grant_type=client_credentials -H "Accept: application/json"
+
+curl http://192.168.1.2:1111/user -H "Authorization: Bearer 155bb134-b4d9-4a47-b69c-3485d2adf929" -H "Content-Type: application/json" -X POST -d '{"username":"larluo", "password":"spiderdt", "email":"larluo@spiderdt.com", "fullName": "Larry Luo"}'
+
+
+curl -X POST -u spiderdt:spiderdt http://localhost:1111/oauth/token\?grant_type=client_credentials -H "Accept: application/json"
+
+curl -X POST -u jupiter:spiderdt http://192.168.1.2:2222/oauth/token -H "Accept: application/json" -d "password=spiderdt&username=chong&grant_type=password&scope=JUPITER_API"
+curl  http://192.168.1.2:2222/user/token -H "Authorization: Bearer 0ffc2e1b-5760-4184-b0e6-911d33574a6a"
+
+curl -X POST -u jupiter:spiderdt http://192.168.1.2:1111/oauth/check_token -H "Authorization: Bearer ff1fe626-6f93-45ab-b91a-c5e7071c013b"
+
+
+
+// UrlMappings.groovy:
+        delete "/$pname/$pid/$controller/$id(.$format)?"(action:"delete")
+        get "/$pname/$pid/$controller(.$format)?"(action:"index")
+        get "/$pname/$pid/$controller/$id(.$format)?"(action:"show")
+        post "/$pname/$pid/$controller(.$format)?"(action:"save")
+        put "/$pname/$pid/$controller/$id(.$format)?"(action:"update")
+        patch "/$pname/$pid/$controller/$id(.$format)?"(action:"patch")
+
+
+// Author.groovy
+class Author {
+    List books
+    static hasMany = [books: Book]
+
+    String name
+
+    static constraints = {
+        name(unique:true, nullable:false)
+    }
+}
+
+// Book.groovy
+class Book {
+    static belongsTo = [author: Author]
+    String title
+
+    static constraints = {
+    }
+}
+
+// BookController.groovy
+    def index(Integer max) {
+        params.max = Math.min(max ?: 10, 100)
+        def books = Author.get(params.pid)?.books ?: []
+        respond books, model:[bookCount: books.size()]
+    }
+    def book = new Book(originBook.properties + [author:Author.get(params.pid)])
+
+
+
+
+              
+
+[1,2,3,4].collect{if(it==3) "a" else if(it==4) "b" else "c"}
+
+
+
+docker exec -it mysql bash //进入mysql 
+mysql -u state_store -pspiderdt  //查询state_store数据库
+vi .git/config  //查询git密码路径配置
+
+解析xml，并生成json：
+@Grapes([
+    @Grab('org.apache.poi:poi:3.15'),
+    @Grab('org.apache.poi:poi-ooxml:3.15')])
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import static org.apache.poi.ss.usermodel.Cell.*
+import org.apache.poi.ss.usermodel.CellType
+
+import java.nio.file.Paths
+import groovy.time.TimeCategory
+
+def parse_xls(xls_path, sheetname) {
+  Paths.get(xls_path).withInputStream { input ->
+    def score_sheet = new XSSFWorkbook(input).getSheet(sheetname)
+    def header = score_sheet.getRow(0).cellIterator().collect{it.stringCellValue}.takeWhile{it != "_"}
+    [["bottler_cn", "bottler_en", *header], 
+     score_sheet.rowIterator().drop(3).collect{ 
+        it.cellIterator().collect{ [(it.cellTypeEnum in  [CellType.NUMERIC]) ? it.numericCellValue.toString() : it.stringCellValue, it.address.column] }
+     }]
+  }
+}
+
+def to_map(dataset) {
+    def (header, matrix) = dataset
+    matrix.collect {
+      it.collectEntries{ val, idx -> [header[idx], val] }
+    }
+}
+def kpi_ly(kpi_date)  { 
+  def (kpi, date) = kpi_date.split("_", 2) 
+  kpi + "_Dec" + use (TimeCategory) { (Date.parse( 'MMMyy', date) - 12.month).format('yy') }
+}
+def kpi_pp(kpi_date) { 
+  def (kpi, date) = kpi_date.split("_", 2) 
+  kpi + "_" + use (TimeCategory) { (Date.parse( 'MMMyy', date) - 1.month).format('MMMyy') }
+}
+def lookup_cols(datamap) {
+    datamap.collect {row ->
+      row.collectEntries {k, v ->
+        k in ['bottler_cn', 'bottler_en'] ? [k,v] : [k, [v, row[kpi_pp(k)] - v, row[kpi_ly(k) - v]]]
+      }
+    }
+}
+def explode_cols(datamap, bottler_group) { 
+  def botter_group_mapping = bottler_group.collectMany{it.value.collect{a_value-> [a_value, it.key]}}.collectEntries{it}
+  datamap.collectMany { 
+    def (bottler, channel) = it['bottler_en'].split("_", 2)
+    it.findAll{!(it.key in ['bottler_cn', 'bottler_en'])}.collect {k, v ->
+      def (kpi, date) = k.split("_", 2)
+      [Date.parse( 'MMMyy', date).format('YYYY-MM'), botter_group_mapping[bottler], bottler, channel, kpi, *v]
+    }
+  }
+}
+
+def cal_expr(dataset, exprs) {
+    def ret = [:]
+    dataset.each {row -> 
+        exprs.each {
+            if(it[dimension].grep{it[0][0] != ':'}.every{ row[it[1]] == it[0] }) {
+                def dimension_category =  it[dimension].grep{it[0][0] == ':'}.toString()
+                def filter_val = it[filter].collect{row[it[1]]}
+                def dimension_val = it[dimension].grep{it[0][0] == ':'}.collectEntries{[it[0].drop(1), row[it[1]]]}
+                def metrics_val = it[metrics].collectEntries{[it[0].drop(1), row[it[1]]]}
+                // ret += [dimension_category : (ret[dimension_category] ?: [:]) + filter_val]
+            }
+        }
+    }
+}
+
+def cocacola_xls = "/home/spiderdt/work/git/spiderdt-working/larluo/score.xlsm"
+
+// date, bottler_group, bottler, channel, kpi, score, score_pp, score_lp
+def exprs = [ [filter : [[":bottler_group", 1], [":bottler", 2]], dimension : [["Total", 3], ["Total", 4]], metrics : [[":score", 5], [":score_pp", 6], [":score_lp", 7]]],
+              [filter : [[":bottler_group", 1], [":bottler", 2]], dimension : [[":channel", 3], ["Total", 4]], metrics : [[":score", 5]]], 
+              [filter : [[":bottler_group", 1], [":bottler", 2]], dimension : [["Total", 3], [":kpi", 4]], metrics : [[":score", 5]]], 
+              [filter : [[":bottler_group", 1], [":bottler", 2]], dimension : [[":channel", 3], ["Total", 4], [":bottler", 2]], metrics : [[":score", 5]]], 
+              [filter : [[":bottler_group", 1], [":bottler", 2]], dimension : [["Total", 3], [":kpi", 4], [":bottler", 2]], metrics : [[":score", 5]]] ]
+def bottler_group = [China : ['China'],
+                     BIG: ['BIG','LNS','GX','YN','Shanxi','LNN','SH','HB','SC','CQ','HLJ','JL'],
+                     CBL: ['CBL','HaiN','BJ','ZM','SD','HeB','JX','TJ','HuN','InnM','GS','XJ'],
+                     SBL: ['SBL','AH','ZJ','FJ','Shaanxi','HeN','JS','GDW','GDE'],
+                     Zhuhai: ['ZH']
+                    ]
+cocacola_xls.with{ parse_xls(it, "score") }
+            .with{ to_map(it) }
+            .with{ lookup_cols(it) }
+            .with{ explode_cols(it, bottler_group) }
+            .with{ cal_expr(it, exprs) }
+            .each{ println(it) }
+
+
+
+grails打war包：grails war
+打好的war包放在：build/libs下
+
+将job从bucket拉下来打war包，部署到tomcat上：
+/home/spiderdt/work/git/spiderdt-release/data-platform/sh/cocacola-data-web.deploy.sh
+#----------------------------
+#* [intro]
+#*   author=chong@spiderdt.com
+#*   func=build cocacola web
+#*=================================
+#* [param]
+#*=================================
+#* [caller]
+#*   jupiter-starter-web.deploy.sh
+#*=================================
+#* [version]
+#*   v1_0=2016-10-12@larluo{create}
+#----------------------------
+
+set -e
+
+echo " [INFO] GIT PULL ..."
+cd /home/spiderdt/work/git/spiderdt-release/data-ui/jupiter-starter
+git pull origin master
+echo " [OK] GIT PULL DONE!\n"
+
+echo " [INFO] PACKAGING ..."
+mvn package -DskipTests       
+echo " [OK] PACKAGING DONE!\n"
+
+echo " [INFO] COPY TO TOMCAT..."
+rm -rf /home/spiderdt/work/apache-tomcat-7.0.70/webapps/{jupiter-starter-web,jupiter-starter-web.war}
+cp jupiter-starter-web/target/jupiter-starter-web-1.0.0-SNAPSHOT.war /home/spiderdt/work/apache-tomcat-7.0.70/webapps/jupiter-starter-web.war
+echo " [OK] COPY TO TOMCAT DONE!\n"
+
+
+text.split("\n").findAll{it.startsWith("link,${prefix}")}.collectEntries{it.split(",")[1..2]}
+
+hdfs dfs -ls /user/hive/warehouse/storage.db
+hdfs dfs -mkdir -p /user/hive/warehouse/storage.db/project=aaa
+hdfs dfs -mkdir -p /user/hive/warehouse/storage.db/project=aaa/category=111
+hdfs dfs -mkdir -p /user/hive/warehouse/storage.db/project=aaa/category=111/container=xx
+hdfs dfs -mkdir -p /user/hive/warehouse/storage.db/project=aaa/category=111/container=xx/node=zz
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"ss","data":"123"}' http://192.168.1.2:2222/project/aaa/category/111/container/xx/node
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"nnn","data":{"a":"a"}}'  http://192.168.1.2:2222/project/aaa/category/111/container/xx/node
+curl -X POST -L -H "Content-Type: application/json" -d '{"name":"cccc","columns":"id","data":"1,2,3"}' http://192.168.1.2:2222/connector/hive/schema/ods/dataset
+
+
+
+
+跨域问题：
+import org.springframework.web.filter.OncePerRequestFilter
+
+import javax.servlet.FilterChain
+import javax.servlet.ServletException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
+class CorsFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+            throws ServletException, IOException {
+
+        if (req.getMethod() == "OPTIONS") {
+            resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            resp.addHeader("Access-Control-Max-Age", "3600")
+            resp.addHeader("Access-Control-Allow-Origin", "*")
+            resp.addHeader("Access-Control-Allow-Credentials", "true")
+            resp.addHeader("Access-Control-Allow-Headers", "x-requested-with,content-type")
+            resp.status = 200
+        } else {
+            resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            resp.addHeader("Access-Control-Max-Age", "3600")
+            resp.addHeader("Access-Control-Allow-Origin", "*")
+            resp.addHeader("Access-Control-Allow-Credentials", "true")
+            resp.addHeader("Access-Control-Allow-Headers", "x-requested-with,content-type")
+            resp.status = 200
+            chain.doFilter(req, resp)
+
+        }
+    }
+}
+
+Register it on the resources.groovy:
+beans = {
+    corsFilterFoo(CorsFilter)
+}
+
+
+
+
+ 
+CREATE EXTERNAL TABLE IF NOT EXISTS stg.d_sample_data (            
+    inventory_id string,
+    biblio_id string,
+    order_id string,
+    line_id string,
+    date string,
+    source_date string,
+    pub_date string,
+    catalog_type string,
+    source_lcp string,
+    current_lcp string,
+    list_price string,
+    rental_units string,
+    rental_price string,
+    rental_bookings string,
+    site_liq_units string,
+    site_liq_price string,
+    site_liq_bookings string,
+    real_price string,
+    bisac_code string,
+    bic_code string,
+    literal string,
+    literal_root string,
+    audience string,
+    biblio_series string,
+    bisac_code_series string,
+    literal_root_series string
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+LOCATION '/user/chong/hive/warehouse/stg.db/sample/data' ;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS chong.d_bolome_prod_cat(
+    category_2 string,
+    category_1 string,
+    barcode string,
+    product_name string,
+    cat1_id string,
+    cat2_id string    
+)ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+LOCATION '/user/hive/warehouse/stg_bk.db/d_bolome_prod_cat/2016-11-29'
+
+CREATE EXTERNAL TABLE IF NOT EXISTS chong.d_bolome_product_category(
+    barcode string,
+    product_name string,
+    category_1 string,
+    category_2 string    
+)ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+LOCATION '/user/hive/warehouse/stg_bk.db/d_bolome_product_category/2016-11-29'
+
+select A.barcode from chong.d_bolome_prod_cat A left join chong.d_bolome_product_category B on A.barcode = B.barcode where B.barcode is null;
+select A.category_2,A.category_1,A.barcode,A.product_name,A.cat1_id,A.cat2_id from chong.d_bolome_prod_cat A full outer join chong.d_bolome_product_category B on A.barcode = B.barcode insert into chong.d_bolome_new_product_category;
+create table chong.d_bolome_new_product_category (category_2 string,category_1 string, barcode string,product_name string,cat1_id string,cat2_id string );
+
+set hive.exec.dynamic.partition=true;(?????????:set hive.exec.dynamic.partition;) 
+set hive.exec.dynamic.partition.mode=nonstrict; 
+SET hive.exec.max.dynamic.partitions=100000;(?????????????,????)
+SET hive.exec.max.dynamic.partitions.pernode=100000;
+//创建分区
+ CREATE TABLE ods.d_sample_data (
+   inventory_id string,
+   biblio_id string,
+   order_id string,
+   line_id string,
+   source_date string,
+   pub_date string,
+   catalog_type string,
+   source_lcp string,
+   current_lcp string,
+   list_price string,
+   rental_units string,
+   rental_price string,
+   rental_bookings string,
+   site_liq_units string,
+   site_liq_price string,
+   site_liq_bookings string,
+   real_price string,
+   bic_code string,
+   literal string,
+   literal_root string,
+   audience string,
+   biblio_series string,
+   bisac_code_series string,
+   literal_root_series string )
+   PARTITIONED BY (date string, bisac_code string);
+
+            //将任务放到yarn上执行
+           spark-sql --master yarn --deploy-mode client --num-executors 8
+
+  set hive.exec.dynamic.partition=true;
+  set hive.exec.dynamic.partition.mode=nonstrict; 
+//设置hive最大分区
+  SET hive.exec.max.dynamic.partitions=10000;
+  SET hive.exec.max.dynamic.partitions.pernode=10000;
+   insert overwrite table ods.d_sample_data
+   select
+      inventory_id,
+      biblio_id,
+      order_id,
+      line_id,
+      source_date,
+      pub_date,
+      catalog_type,
+      source_lcp,
+      current_lcp,
+      list_price,
+      rental_units,
+      rental_price,
+      rental_bookings,
+      site_liq_units,
+      site_liq_price,
+      site_liq_bookings,
+      real_price,
+      bic_code,
+      literal,
+      literal_root,
+      audience,
+      biblio_series,
+      bisac_code_series,
+      literal_root_series,
+      date,
+      bisac_code   
+   from stg.d_sample_data;
+   
+
+//创建外部表设置分区
+create external table if not exists ods.d_sample_data(
+   inventory_id string,
+   biblio_id string,
+   order_id string,
+   line_id string,
+   date string,
+   source_date string,
+   pub_date string,
+   catalog_type string,
+   source_lcp string,
+   current_lcp string,
+   list_price string,
+   rental_units string,
+   rental_price string,
+   rental_bookings string,
+   site_liq_units string,
+   site_liq_price string,
+   site_liq_bookings string,
+   real_price string,
+   bisac_code string,
+   bic_code string,
+   literal string,
+   literal_root string,
+   audience string,
+   biblio_series string,
+   bisac_code_series string,
+   literal_root_series string )
+partitioned by (p_date string, p_bisac_code string)
+LOCATION '/user/hive/warehouse/ods.db/sample/data';
+alter table ods.d_sample_data1  add partition(p_date='2012-09-18', p_bisac_code='BUS008000');
+msck repart table ods.d_sample_data;
+
+
+
+set hive.execution.engine=spark;
+set spark.master=yarn;
+set spark.deploy.mode=client;
+
+https://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.10.3/scala-compiler-2.10.3.jar
+
+Downloading: wget -c https://repo1.maven.org/maven2/org/scalanlp/breeze_2.11/0.11.2/breeze_2.11-0.11.2.jar
+Downloading: wget -c https://repo1.maven.org/maven2/org/jblas/jblas/1.2.4/jblas-1.2.4.jar
+Downloading: wget -c https://repo1.maven.org/maven2/org/spire-math/spire_2.11/0.7.4/spire_2.11-0.7.4.jar
+
+
+ ./make-distribution.sh --name "hadoop2-without-hive" --tgz "-Pyarn,hadoop-provided,hadoop-2.7,parquet-provided,scala-2.11 -Dscala-2.11"
+
+
+//hive on hbase 
+//在hbase上创建一个表
+create 'd_sample_data1','info'
+//在hive上创建一个外表与hbase的d_sample_data1映射。
+create external table if not exists  hbase.d_sample_data1(
+   rowkey string,
+   inventory_id string,
+   biblio_id string,
+   order_id string,
+   line_id string,
+   `date` string,
+   source_date string,
+   pub_date string,
+   catalog_type string,
+   source_lcp string,
+   current_lcp string,
+   list_price string,
+   rental_units string,
+   rental_price string,
+   rental_bookings string,
+   site_liq_units string,
+   site_liq_price string,
+   site_liq_bookings string,
+   real_price string,
+   bisac_code string,
+   bic_code string,
+   literal string,
+   literal_root string,
+   audience string,
+   biblio_series string,
+   bisac_code_series string,
+   literal_root_series string)
+   stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+   WITH SERDEPROPERTIES (  "hbase.columns.mapping" = ":key,info:inventory_id ,info:biblio_id ,info:order_id ,info:line_id ,info:date ,info:source_date ,info:pub_date ,info:catalog_type ,info:source_lcp ,info:current_lcp ,info:list_price ,info:rental_units ,info:rental_price ,info:rental_bookings ,info:site_liq_units ,info:site_liq_price ,info:site_liq_bookings ,
+   info:real_price ,info:bisac_code ,info:bic_code ,info:literal ,info:literal_root ,info:audience ,info:biblio_series ,info:bisac_code_series ,info:literal_root_series ")
+   tblproperties("hbase.table.name"="d_sample_data1");
+
+
+
+   字符串拼接,从hive的分区表上查询数据并插入到hbase.d_sample_data1中
+   insert overwrite table hbase.d_sample_data1 select concat_ws("#",p_date,p_bisac_code,lpad(inventory_id,16,"0")), inventory_id , biblio_id , order_id , line_id , `date` , source_date , pub_date , catalog_type , source_lcp , current_lcp , list_price , rental_units , rental_price , rental_bookings , site_liq_units , site_liq_price , site_liq_bookings ,
+    real_price , bisac_code , bic_code , literal , literal_root , audience , biblio_series , bisac_code_series , literal_root_series from ods.d_sample_data where p_date='2012-09-18' and  p_bisac_code='BUS008000';
+
+
+   hive on hbase:http://www.cnblogs.com/skyl/p/4849163.html
+
+009ABB
+//添加hive依赖的jar包
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-annotations-1.1.1.jar ;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-client-1.1.1.jar ;
+
+add jar  /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-common-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-common-1.1.1-tests.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-hadoop2-compat-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-hadoop2-compat-1.1.1-test.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-hadoop-compat-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-prefix-tree-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-procedure-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-protocol-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hbase-server-1.1.1.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/hive-hbase-handler-2.1.0.jar;
+ 
+add jar /home/chong/work/git/spiderdt-env/cluster/tarball/apache-hive-2.1.0-bin/lib/tephra-hbase-compat-1.0-0.6.0.jar;
+
+对分区列优化引起的nullScanFileSystem错误
+  修改hive-site.xml
+  添加hive.optimize.metadataonly 参数为 false (默认为true)
+
+
+AZKABAN：
+登录：curl -k -X POST --data "action=login&username=azkaban&password=azkaban" https://192.168.1.2:8443
+创建一个project：curl -k -X POST --data "session.id=9089beb2-576d-47e3-b040-86dbdc7f523e&name=aaaa&description=11" https://localhost:8443/manager?action=create
+
+创建外部表
+shows.cvs
+hdfs->stg（hive）
+create external table if not exists stg.d_bolome_shows (
+   show_id string,
+   show_name string,
+   begin_time string,
+   end_time string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LOCATION '/user/hive/warehouse/stg.db/d_bolome_shows/0000-00-00';
+
+
+
+ods(hive)
+create external table if not exists ods.d_bolome_shows(
+   show_id string,
+   show_name string,
+   begin_time string,
+   end_time string);
+
+insert overwrite table ods.d_bolome_shows 
+select 
+show_id ,
+show_name ,
+begin_time ,
+end_time  
+from stg.d_bolome_shows ;
+
+
+ insert overwrite table ods.d_bolome_shows
+    select
+     coalesce(src.show_id, tgt.show_id),//coalesce返回第一个不为null的值
+     coalesce(src.show_name, tgt.show_name) ,
+     coalesce(src.begin_time, tgt.begin_time) ,
+     coalesce(src.end_time, tgt.end_time) 
+     from ods.d_bolome_shows tgt
+     full outer join stg.d_bolome_shows src on tgt.show_id = src.show_id;
+
+
+自动分区：
+# 1. ftp -> hdfs[stg]
+list: fetch-data.sh sample.data '1970-01-01,2016-07-27'
+range: fetch-data.sh sample.data '1970-01-01#2016-07-27'
+
+# 2. hdfs[stg] -> hdfs[ods]
+#2.1 partition
+$SPARK_HOME/bin/spark-submit --master yarn --deploy-mode client --num-executors 4 \
+    --driver-memory 2g --executor-memory 2g \
+    --class etl_helper.ods etl-helper-0.1.0-SNAPSHOT-standalone.jar \
+    d_bolome_dau '[[:p_date 1]]'
+
+#2.2 merge
+ ~/work/git/spiderdt-env/cluster/tarball/spark$ bin/spark-submit \
+    --name Merge --class com.spiderdt.merge.Merge --master yarn \
+    --deploy-mode client ~/work/kun/merge.jar  \
+    d_bolome_shows '[[:show_id 0]'
+
+# 3. hdfs[ods] -> hive[ods]
+java -cp *.jar app sample.data '[:p_date :p_bisac_code]'
+show partitions [table]
+
+# 4. hive[ods]->hive[model]->hive[sum]->hive[rpt] (read:hive, write.scala]
+# 5. steve preprocess
+# 6. data service-> thrift,rest
+
+ods(hdfs)->ods(hive)在ods(hive)上创建外部表：
+
+create external table if not exists ods.d_bolome_orders(
+   prt_path string,
+   pay_date string,
+   user_id string,
+   order_id string,
+   barcode string,
+   quantity string,
+   price string,
+   warehouse_id string,
+   show_id string,
+   preview_show_id string,
+   replay_show_id string,
+   coupon_id string,
+   event_id string,
+   copon_discount_amount string,
+   system_discount_amoun string,
+   tax_amount string,
+   logistics_amount string)
+   partitioned by(p_date string)
+   location '/user/hive/warehouse/ods.db/d_bolome_orders';
+   alter table ods.d_bolome_orders add partition(p_date='2015-07-01');
+    
+
+
+在order表里添加分区：
+alter table ods.d_bolome_orders  add partition(p_date='2016-06-01') ;
+alter table ods.d_bolome_orders  add partition(p_date='2016-06-02') ;
+alter table ods.d_bolome_orders  add partition(p_date='2016-06-03') ;
+alter table ods.d_bolome_orders  add partition(p_date='2016-06-04') ;
+
+
+查询订单总记录数，用户、订单去重计算，总价钱计算
+select p_date , count(*),count(distinct user_id) ,count(distinct order_id), sum(price-copon_discount_amount-system_discount_amoun) from ods.d_bolome_orders group by p_date order by p_date;
+   删除分区：
+alter table ods.d_bolome_orders drop partition(p_date='2016-07-08');
+
+
+join caregory on orders:
+select ordr.p_date, category.category_1, count(*), count(distinct ordr.user_id) ,count(distinct ordr.order_id), sum(ordr.price-ordr.copon_discount_amount-ordr.system_discount_amoun) 
+from ods.d_bolome_orders ordr
+left join ods.d_bolome_product_category category
+on ordr.barcode = category.barcode
+group by ordr.p_date,  category.category_1
+order by ordr.p_date desc,  category.category_1 ;
+
+
+
+下订单最多的用户，用户平均下的订单
+select max(order_num), avg(order_num)
+from (
+    select user_id, count(distinct order_id) as order_num
+    from ods.d_bolome_orders
+    group by user_id
+) tmp;
+
+每件商品每天的销量，用户量，最高价，最低价：
+select barcode,p_date,max(price * quantity -copon_discount_amount-system_discount_amoun),
+               min(price * quantity -copon_discount_amount-system_discount_amoun),
+              sum(quantity),count(distinct user_id) 
+from ods.d_bolome_orders group by barcode, p_date order by barcode, p_date ;
+
+join catagory 和 orders 每件商品销量，用户量，最高价，最低价：
+select category.product_name,max(ord.price * quantity-copon_discount_amount-system_discount_amoun),
+       min(ord.price * quantity-copon_discount_amount-system_discount_amoun),
+       sum(ord.quantity) as res,count(distinct ord.user_id) 
+from ods.d_bolome_orders ord
+left join ods.d_bolome_product_category category
+on ord.barcode = category.barcode
+group by category.product_name
+order by res desc
+limit 100 ;
+
+
+select barcode from ods.d_bolome_product_category where product_name = 'LULULUN 新版补水美白淡斑面膜 清爽透明 7枚'; 4582305061048
+
+因为在max(price * quantity -copon_discount_amount-system_discount_amoun),min(price * quantity -copon_discount_amount-system_discount_amoun),
+计算时没有写*quantity导致min（）出现了负数，所以查询如下:
+select barcode from ods.d_bolome_product_category where product_name = 'LULULUN 新版补水美白淡斑面膜 清爽透明 7枚'; 4582305061048
+select * from  ods.d_bolome_orders
+where barcode='4582305061048' and price-copon_discount_amount-system_discount_amoun<0;
+
+RDD
+
+    val odsPath = "hdfs://192.168.1.3:9000/user/hive/warehouse/ods.db/" + "d_bolome_shows" + "/000000_0"
+    val stgPath = "hdfs://192.168.1.3:9000/user/hive/warehouse/stg.db/" + "d_bolome_shows" + "/0000-00-00/data.csv"
+
+
+    val odsRDD = sc.textFile(odsPath).cache()
+    val stgRDD = sc.textFile(stgPath).cache()
+
+
+    val stgMap = stgRDD.map(line => (line.split(",")(0),line))
+    val odsMap = odsRDD.map(line => (line.split("\001")(0), line))
+    
+
+    val stg = stgMap.collectAsMap
+    val ods = odsMap.collectAsMap
+
+    val merge = ods ++ stg相当于(ods.union(stg))
+
+    val mergeRDD = sc.parallelize(merge.toList)
+    mergeRDD.saveAsTextFile("hdfs://192.168.1.3:9000/user/hive/warehouse/ods.db/d_bolome_shows")
+
+
+
+
+
+unset http_proxy https_proxy; curl -k --get --data "session.id=f4c31ae4-dce1-4006-b8f2-827a34c015f9&delete=true&project=qqq" https://192.168.1.2:8443/manager
+
+
+azkaban 
+http://www.jianshu.com/p/484564beda1d
+1.create a job
+   type=command
+   command=echo "spiderdata"
+2.create a flow
+   #spider_2_hive.job
+   type=command
+   command=echo "spider_2_hive"
+   dependencies= "spider_clean_data"
+
+   #spider_clean_data.job
+   type=command
+   command=echo "spider_clean_data"
+   dependencies="spider_up_2_hdfs"
+
+   #spider_up_2_hdfs.job
+   type=command
+   command=echo "spider_up_2_hdfs"
+   dependencies="spider_get_file_ftp1,spider_get_file_ftp2"
+
+   #spider_get_file_ftp1.job
+   type=command
+   command=echo "spider_get_file_ftp1"
+
+   #spider_get_file_ftp2.job
+   type=command
+   command=echo "spider_get_file_ftp2"
+
+
+
+
+Flow view：流程视图。可以禁用，启用某些job
+Notification:定义任务成功或者失败是否发送邮件
+Failure Options:定义一个job失败，剩下的job怎么执行
+Concurrent：并行任务执行设置
+Flow Parametters：参数设置。
+
+
+
+#bolome_data_ingest.job
+type=command
+command=echo "bolome_data_ingest"
+
+#bolome_dau.job
+type=command
+command=echo "bolome_dau"
+dependencies=bolome_data_ingest
+
+#bolome_events.job
+type=command
+command=echo "bolome_events"
+dependencies=bolome_data_ingest
+
+#bolome_inventory.job
+type=command
+command=echo "bolome_inventory"
+dependencies=bolome_data_ingest
+
+#bolome_orders.job
+type=command
+command=echo "bolome_orders"
+dependencies=bolome_data_ingest
+
+#bolome_product_category.job
+type=command
+command=echo "bolome_product_category"
+dependencies=bolome_data_ingest
+
+#bolome_shows.job
+type=command
+command=echo "bolome_shows"
+dependencies=bolome_data_ingest
+
+
+枚举 句柄
+
+[TABLE_CAT, TABLE_SCHEM, TABLE_NAME, COLUMN_NAME, DATA_TYPE, TYPE_NAME, COLUMN_SIZE, BUFFER_LENGTH, DECIMAL_DIGITS, NUM_PREC_RADIX, NULLABLE, REMARKS, COLUMN_DEF, SQL_DATA_TYPE, SQL_DATETIME_SUB, CHAR_OCTET_LENGTH, ORDINAL_POSITION, IS_NULLABLE, SCOPE_CATALOG, SCOPE_SCHEMA, SCOPE_TABLE, SOURCE_DATA_TYPE, IS_AUTO_INCREMENT]
+
+hive thrift:
+
+/*
+      def transport = new TSaslClientTransport (
+            'PLAIN',
+            null,
+            null,
+            null,
+            [:],
+            { it.each {
+                if (it instanceof NameCallback)  it.setName("spiderdt")
+                else if (it instanceof PasswordCallback) it.setPassword("spiderdt".toCharArray())
+                else throw new UnsupportedCallbackException(it)
+            }},
+            null,
+
+            new TSocket("192.168.1.3", 10000)
+      )
+      transport.open()
+      def client = new TCLIService.Client(new TBinaryProtocol(transport))
+      def sess_handle = client.OpenSession(new TOpenSessionReq(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8)).sessionHandle
+
+      // def sql = "select * from model.d_bolome_product_category limit 10 "
+      // def op_handle = client.ExecuteStatement(new TExecuteStatementReq(sess_handle, sql)).opensportrationHandle
+     // def op_value  = client.GetInfo(new TGetInfoReq(sess_handle, TGetInfoType.CLI_DBMS_NAME)).infoValue
+      // def op_status = client.GetOperationStatus(new TGetOperationStatusReq(op_handle)).status.statusCode
+      //def op_handle = client.GetCatalogs(new TGetCatalogsReq(sess_handle)).operationHandle
+      def op_handle = client.GetSchemas(new TGetSchemasReq(sess_handle)).operationHandle
+      def op_rowset = client.FetchResults(new TFetchResultsReq(op_handle, TFetchOrientation.FETCH_NEXT, 100)).results.columns[0].stringVal.values
+
+      def op_metadata = client.GetResultSetMetadata(new TGetResultSetMetadataReq(op_handle)).schema
+
+      transport.close()
+      // println( op_rowset.properties )
+      //println (op_metadata.properties)
+      println(op_rowset)
+      // println(op_metadata)
+*/
+
+println(
+TCLIServiceClient.executeQuery(TCLIServiceClient.openHiveClient("192.168.1.3", 10000, "spiderdt", "spiderdt"),
+"""
+select count(1) from (select user_id from model.d_bolome_orders where barcode in('8806164115336','4971710261813','4901301230638')group by user_id having count(case when pay_date >='2016-06-01' and pay_date <= '2016-06-30' then 1 end)  >= 1 and count(case when pay_date < '2016-06-01' then 1 end) >= 1) tmp
+""")
+)
+
+
+
+    docker exec -it mysql bash -c "mysql -uroot -pspiderdt -e \"CREATE DATABASE ms\""
+    docker exec -it mysql bash -c "mysql -uroot -pspiderdt -e \"CREATE USER 'ms'@'localhost' IDENTIFIED BY 'spiderdt'\""
+    docker exec -it mysql bash -c "mysql -uroot -pspiderdt -e \"GRANT ALL PRIVILEGES ON ms.* TO ms IDENTIFIED BY 'spiderdt'\""
+    docker exec -it mysql bash -c "mysql -uroot -pspiderdt -e \"CREATE DATABASE state_store\""
+    docker exec -it mysql bash -c "mysql -uroot -pspiderdt -e \"GRANT ALL PRIVILEGES ON state_store.* TO ms\""
+
+
+
+
+core-service:
+mongo:
+docker save mongo:latest > ~spiderdt/work/git/spiderdt-env/docker/mongo#latest.docker
+ansible core-service -i hosts -m copy -a "src=~spiderdt/work/git/spiderdt-env/docker/mongo#latest.docker dest=~spiderdt/work/git/spiderdt-env/docker mode=0644"
+ansible core-service -i hosts -m raw -a "docker load < ~spiderdt/work/git/spiderdt-env/docker/mongo#latest.docker"
+ansible core-service -i hosts -m shell -a "rm -rf  ~spiderdt/work/git/spiderdt-env/docker/mongo#latest.docker"
+ansible core-service -i hosts -m docker -a "name=mongo image=mongo:latest ports='0.0.0.0:27017:27017' state=restarted restart_policy=always volumes='/data/mongo:/data/db'"
+检查是否移到远程成功：
+ansible core-service -i hosts -m shell -a "docker images"
+
+mysql:
+docker save mysql:5.7 > ~spiderdt/work/git/spiderdt-env/docker/mysql#5.7.docker
+ansible core-service -i hosts -m copy -a "src=data/mysql dest=/data mode=0644"
+ansible core-service -i hosts -m copy -a "src=~spiderdt/work/git/spiderdt-env/docker/mysql#5.7.docker dest=~spiderdt/work/git/spiderdt-env/docker mode=0644"
+ansible core-service -i hosts -m raw -a "docker load < ~spiderdt/work/git/spiderdt-env/docker/mysql#5.7.docker"
+ansible core-service -i hosts -m shell -a "rm -rf  ~spiderdt/work/git/spiderdt-env/docker/mysql#5.7.docker"
+ansible core-service -i hosts -m docker -a "name=mysql image=mysql:5.7 ports='0.0.0.0:3306:3306' state=restarted restart_policy=always env='{\"MYSQL_ROOT_PASSWORD\":\"spiderdt\"}' volumes='/data/mysql:/var/lib/mysql'"
+
+postgres:
+docker pull postgres:9.6
+docker save postgres:9.6 > ~spiderdt/work/git/spiderdt-env/docker/postgres#9.6.docker
+ansible core-service -i hosts -m copy -a "src=~spiderdt/work/git/spiderdt-env/docker/postgres#9.6.docker dest=~spiderdt/work/git/spiderdt-env/docker mode=0644"
+ansible core-service -i hosts -m raw -a "docker load < ~spiderdt/work/git/spiderdt-env/docker/postgres#9.6.docker"
+ansible core-service -i hosts -m shell -a "rm -rf  ~spiderdt/work/git/spiderdt-env/docker/postgres#9.6.docker"
+ansible core-service -i hosts -m docker -a "name=postgres image=postgres:9.6 ports='0.0.0.0:5432:5432' state=restarted restart_policy=always env='{\"POSTGRES_PASSWORD\":\"spiderdt\"}' volumes='/data/psql:/var/lib/postgresql/data'"
+
+hdfs dfs -rm -r /user/hive/warehouse/stg.db/*
+
+
+mv old data (ods.db -> ods_bk.db):第一次的数据，即hdfs上还没有数据
+ hdfs dfs -mv /user/hive/warehouse/stg.db/d_bolome_dau /user/hive/warehouse/stg_bk.db
+ hdfs dfs -mv /user/hive/warehouse/stg.db/d_bolome_events /user/hive/warehouse/stg_bk.db
+ hdfs dfs -mv /user/hive/warehouse/stg.db/d_bolome_inventory /user/hive/warehouse/stg_bk.db
+ hdfs dfs -mv /user/hive/warehouse/stg.db/d_bolome_orders /user/hive/warehouse/stg_bk.db
+ hdfs dfs -mv /user/hive/warehouse/stg.db/d_bolome_product_category /user/hive/warehouse/stg_bk.db
+ hdfs dfs -mv /user/hive/warehouse/stg.db/d_bolome_shows /user/hive/warehouse/stg_bk.db
+
+
+
+mkdir new file data(stg.db):
+hdfs dfs -mkdir -p /user/hive/warehouse/stg.db/d_bolome_dau/$(date '+%Y-%m-%d')
+hdfs dfs -mkdir -p /user/hive/warehouse/stg.db/d_bolome_events/$(date '+%Y-%m-%d')
+hdfs dfs -mkdir -p /user/hive/warehouse/stg.db/d_bolome_inventory/$(date '+%Y-%m-%d')
+hdfs dfs -mkdir -p /user/hive/warehouse/stg.db/d_bolome_orders/$(date '+%Y-%m-%d')
+hdfs dfs -mkdir -p /user/hive/warehouse/stg.db/d_bolome_product_category/$(date '+%Y-%m-%d')
+hdfs dfs -mkdir -p /user/hive/warehouse/stg.db/d_bolome_shows/$(date '+%Y-%m-%d')
+
+put new data to stg.db($(date '+%Y-%m-%d')):
+hdfs dfs -put /home/steve/bolome_july/events.csv /user/hive/warehouse/stg.db/d_bolome_events/$(date '+%Y-%m-%d')
+hdfs dfs -put /home/steve/bolome_july/inventory.csv /user/hive/warehouse/stg.db/d_bolome_inventory/$(date '+%Y-%m-%d')
+hdfs dfs -put /home/steve/bolome_july/orders.csv /user/hive/warehouse/stg.db/d_bolome_orders/$(date '+%Y-%m-%d')
+hdfs dfs -put /home/steve/bolome_july/product_category.csv /user/hive/warehouse/stg.db/d_bolome_product_category/$(date '+%Y-%m-%d')
+hdfs dfs -put /home/steve/bolome_july/shows.csv /user/hive/warehouse/stg.db/d_bolome_shows/$(date '+%Y-%m-%d')
+hdfs dfs -put /home/spiderdt/data/bolome_dump/dau.csv /user/hive/warehouse/stg_bk.db/d_bolome_dau/0000-00-00
+
+run merge :
+groovy -Dorg.apache.logging.log4j.level=info spark_etl_merge.groovy d_bolome_product_category '[[":barcode", 0]]'
+groovy -Dorg.apache.logging.log4j.level=info spark_etl_merge.groovy d_bolome_shows '[[":show_id", 0]]'
+
+run prt:
+groovy -Dorg.apache.logging.log4j.level=info spark_etl_prt.groovy d_bolome_dau '[[":p_date", 1]]'
+groovy -Dorg.apache.logging.log4j.level=info spark_etl_prt.groovy d_bolome_events '[[":p_date",3]]'
+groovy -Dorg.apache.logging.log4j.level=info spark_etl_prt.groovy d_bolome_inventory '[[":p_date",0]]'
+groovy -Dorg.apache.logging.log4j.level=info spark_etl_prt.groovy d_bolome_orders '[[":p_date",0]]'
+
+/home/spiderdt/work/git/spiderdt-team/data-platform/repo-deployer/jupiter-starter-web.deploy.sh
+/home/spiderdt/work/git/spiderdt-team/data-platform/repo-deployer/cocacola-data-web.deploy.sh
+
+
+
+import com.mysql.cj.jdbc.MysqlDataSource
+
+new MysqlDataSource().each {
+            it.url = "jdbc:mysql://${hostname}:${port}/ms?useSSL=false".toString()
+            it.user = username
+            it.password = password
+        }
+
+
+		
+
+
+report-api:
+curl -L -X GET -H "content-type: application/json" -H "Authorization: Bear fd37a70b-daf5-4906-b7e7-466491e3ede4" -d '{"args":{"selectorIds": ["[\"period=2016-10-31\",\"bg=BIG\",\"bottler=BIG Total / 全体\"]"]}}' http://192.168.1.2:2222/project/cocacola/category/score/report/GT_Rural_Bg/selector/ARGS/data
+["period=2015-10-31", "bg=CBL", "bottler=Inner Mongolia / 内蒙古]
+curl -L -X GET -H "content-type: application/json" -H "Authorization: Bear 4ba0ad7c-54f1-41d6-a6e1-f999df652372" -d '{"args":{"selectorIds": ["[\"period=2016-10-31\",\"bg=BIG\",\"bottler=BIG Total / 全体\"]"]}}' https://192.168.1.2:8443/report-api-v1/project/cocacola/category/score/report/channel/selector/ARGS/data
+curl -L -X GET -H "content-type: application/json" -d '{"args":{"selectorIds": ["[\"bottler=Jilin / 吉林\",\"channel=E&D Trad / 传统餐饮\",\"kpi=排面占有率\"]"]}}' http://192.168.1.2:2222/project/cocacola/category/score/report/period/selector/ARGS/data
+curl -L -X GET -H "content-type: application/json" -d '{"args":{"selectorIds": ["[\"bottler=Chongqing / 重庆\",\"channel=E&D M/H / 中高档餐饮\",\"kpi=价格沟通\"]"]}}' http://192.168.1.2:2222/project/cocacola/category/score/report/period/selector/ARGS/data
+
+curl -L -X GET -H "content-type: application/json" -d '{"args":{"selectorIds": ["[\"bottler=Sichuan / 四川\",\"channel=SMKT / 超市\",\"kpi=渠道执行\"]"]}}' http://192.168.1.2:2222/project/cocacola/category/score/report/period_months/selector/ARGS/data
+
+
+
+curl -L -X GET -H "Authorization: Bear 2b7a8a9b-5aa5-4e8a-9e55-f7bc2721887f" -d '{"args":{"reportIds": ["channel","kpi"]}}' http://192.168.1.2:2222/project/cocacola/category/score/report/ARGS/selector
+schduler-api:
+curl -H "Content-Type: application/json" -X GET -d '{"args": {"jobIds": ["aaabbb_20160501_20160528","test5_20160601_20160630"]}}' http://192.168.1.2:2222/project/jupiter_itemMarketing/category/ml/job/ARGS
+
+pgadmin:
+show client_encoding;
+set client_encoding='GBK';
+
+
+[:request-time:28, 
+:repeatable?:false, 
+:protocol-version:[:name:HTTP, :major:1, :minor:1], 
+:streaming?:true, :chunked?:true, :reason-phrase:, 
+:headers:[Transfer-Encoding:chunked, Strict-Transport-Security:max-age=31536000 ; includeSubDomains, WWW-Authenticate:Bearer realm="auth", error="invalid_token", error_description="Invalid access token: Bear 1111", X-Content-Type-Options:nosniff, X-Frame-Options:DENY, Cache-Control:no-store, X-XSS-Protection:1; mode=block, Pragma:no-cache, Content-Type:application/json;charset=UTF-8, Date:Thu, 29 Dec 2016 02:47:06 GMT], :orig-content-encoding:null, :status:401, :length:-1, 
+:body:{"error":"invalid_token","error_description":"Invalid access token: Bear 1111"}, 
+:trace-redirects:[https://192.168.1.2:8443/auth-api-v1/user/token]]
+
+
+
+
+29-Dec-2016 07:40:20.303 SEVERE [localhost-startStop-8] org.apache.catalina.core.ContainerBase.addChildInternal ContainerBase.addChild: start:
+ org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/report-api-v1]]
+        at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:167)
+        at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:752)
+        at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:728)
+        at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:734)
+        at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:952)
+        at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1823)
+        at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.IllegalArgumentException: LoggerFactory is not a Logback LoggerContext but Logback is on the classpath. Either remove Logback or the competing implementation (class com.github.fzakaria.slf4j.timbre.TimbreLoggerFactory loaded from file:/data/tomcat/report-api-v1/WEB-INF/lib/slf4j-timbre-0.3.2.jar). If you are using WebLogic you will need to add 'org.slf4j' to prefer-application-packages in WEB-INF/weblogic.xml Object of class [com.github.fzakaria.slf4j.timbre.TimbreLoggerFactory] must be an instance of class ch.qos.logback.classic.LoggerContext
+        at org.springframework.util.Assert.isInstanceOf(Assert.java:346)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.getLoggerContext(LogbackLoggingSystem.java:231)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.beforeInitialize(LogbackLoggingSystem.java:97)
+        at org.springframework.boot.logging.LoggingApplicationListener.onApplicationStartedEvent(LoggingApplicationListener.java:226)
+        at org.springframework.boot.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:205)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:166)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:121)
+        at org.springframework.boot.context.event.EventPublishingRunListener.started(EventPublishingRunListener.java:62)
+        at org.springframework.boot.SpringApplicationRunListeners.started(SpringApplicationRunListeners.java:48)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:304)
+        at grails.boot.GrailsApp.run(GrailsApp.groovy:83)
+        at org.springframework.boot.web.support.SpringBootServletInitializer.run(SpringBootServletInitializer.java:151)
+        at org.grails.boot.context.web.GrailsAppServletInitializer.createRootApplicationContext(GrailsAppServletInitializer.groovy:57)
+        at org.springframework.boot.web.support.SpringBootServletInitializer.onStartup(SpringBootServletInitializer.java:86)
+        at org.springframework.web.SpringServletContainerInitializer.onStartup(SpringServletContainerInitializer.java:169)
+        at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5178)
+        at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+        ... 10 more
+
+29-Dec-2016 07:40:20.304 SEVERE [localhost-startStop-8] org.apache.catalina.startup.HostConfig.deployWAR Error deploying web application archive /data/tomcat/report-api-v1.war
+ java.lang.IllegalStateException: ContainerBase.addChild: start: org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/report-api-v1]]
+        at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:756)
+        at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:728)
+        at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:734)
+        at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:952)
+        at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1823)
+        at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+
+29-Dec-2016 07:40:20.305 INFO [localhost-startStop-8] org.apache.catalina.startup.HostConfig.deployWAR Deployment of web application archive /data/tomcat/report-api-v1.war has finished in 5,025 ms
+
+
+
